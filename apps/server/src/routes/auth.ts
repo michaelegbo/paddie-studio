@@ -19,10 +19,12 @@ export const authRouter = Router();
 authRouter.get('/login', (req, res) => {
   const returnTo = parseReturnTo(req.query.returnTo, '/app');
   const client = String(req.query.client || 'web').toLowerCase() === 'desktop' ? 'desktop' : 'web';
-  const request = oidc.createAuthorizationRequest(client, returnTo);
+  const screenHint =
+    String(req.query.screenHint || '').toLowerCase() === 'signup' ? 'signup' : 'login';
+  const request = oidc.createAuthorizationRequest(client, returnTo, { screenHint });
 
   if (req.query.json === '1' || req.query.json === 'true') {
-    res.json({ success: true, authorizationUrl: request.url, state: request.state, client });
+    res.json({ success: true, authorizationUrl: request.url, state: request.state, client, screenHint });
     return;
   }
 

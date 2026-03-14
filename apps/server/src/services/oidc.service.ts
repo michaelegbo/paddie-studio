@@ -36,7 +36,11 @@ export class OIDCService {
     return OIDCService.instance;
   }
 
-  createAuthorizationRequest(client: 'web' | 'desktop', returnTo: string): {
+  createAuthorizationRequest(
+    client: 'web' | 'desktop',
+    returnTo: string,
+    options?: { screenHint?: 'login' | 'signup' }
+  ): {
     state: string;
     url: string;
   } {
@@ -63,6 +67,9 @@ export class OIDCService {
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
     });
+    if (options?.screenHint) {
+      params.set('screen_hint', options.screenHint);
+    }
 
     return {
       state,

@@ -21,7 +21,10 @@ export default function SignupPage() {
         </p>
 
         <div className="auth-actions">
-          <Button className="button-lift" onClick={() => (window.location.href = "/api/auth/login?returnTo=/app")}>
+          <Button
+            className="button-lift"
+            onClick={() => (window.location.href = "/api/auth/login?returnTo=/app&screenHint=signup")}
+          >
             Continue to sign up
           </Button>
           <Button variant="ghost" onClick={() => (window.location.href = "/login")}>
