@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Button, Logo } from "@paddie-studio/ui";
+import { Logo } from "@paddie-studio/ui";
+import { LaunchStudioButton } from "./LaunchStudioButton";
 
 export function Navbar() {
   return (
@@ -17,7 +18,7 @@ export function Navbar() {
         </div>
         <div className="nav-links">
           <Link href="/login">Login</Link>
-          <Link href="/app"><Button>Launch Studio</Button></Link>
+          <LaunchStudioButton />
         </div>
       </div>
     </div>

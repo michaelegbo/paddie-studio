@@ -1,9 +1,11 @@
-import type { StudioSession } from "@paddie-studio/types";
+import type { AuthenticatedUserContext } from './middleware/jwt.middleware';
+import type { StudioSessionRecord } from './services/session.service';
 
 declare global {
   namespace Express {
     interface Request {
-      session?: StudioSession;
+      session?: StudioSessionRecord;
+      user?: AuthenticatedUserContext;
     }
   }
 }

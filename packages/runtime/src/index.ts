@@ -1,25 +1,61 @@
-import type { ExecutionTraceStep, FlowRun, StudioFlow } from "@paddie-studio/types";
+import type {
+  StudioCodegen,
+  StudioFlow,
+  StudioNode,
+  StudioRun,
+  StudioExecutionTraceStep,
+} from '@paddie-studio/types';
 
-export interface RunFlowOptions {
-  trigger: FlowRun["trigger"];
+export interface RuntimeExecuteRequest {
+  flow: StudioFlow;
+  trigger: 'manual' | 'webhook' | 'chat';
   input?: unknown;
 }
 
-export function createPlaceholderRun(flow: StudioFlow, options: RunFlowOptions): FlowRun {
-  const now = new Date().toISOString();
-  const trace: ExecutionTraceStep[] = flow.nodes.map((node) => ({
-    id: `${flow.id}:${node.id}`,
-    nodeId: node.id,
-    status: "pending",
-  }));
+export interface RuntimeExecuteResponse {
+  run: StudioRun;
+}
 
+export interface RuntimeCodegenRequest {
+  flow: StudioFlow;
+  language: 'javascript' | 'python';
+  webhookUrl: string;
+}
+
+export interface RuntimeCodegenProvider {
+  generate(request: RuntimeCodegenRequest): StudioCodegen;
+}
+
+export function createTraceSkeleton(flow: StudioFlow): StudioExecutionTraceStep[] {
+  return flow.nodes.map((node, index) => ({
+    step: index + 1,
+    nodeId: node.id,
+    nodeType: node.type,
+    status: 'failed',
+    startedAt: new Date().toISOString(),
+    endedAt: new Date().toISOString(),
+    durationMs: 0,
+    dispatches: [],
+  }));
+}
+
+export function createPendingRun(flow: StudioFlow, trigger: RuntimeExecuteRequest['trigger'], input?: unknown): StudioRun {
+  const now = new Date().toISOString();
   return {
-    id: `run_${Date.now()}`,
+    id: `studio_run_${Date.now()}`,
     flowId: flow.id,
-    status: "pending",
-    trigger: options.trigger,
-    input: options.input,
-    trace,
-    createdAt: now,
+    status: 'success',
+    triggeredBy: trigger,
+    triggerPayload: input ?? {},
+    output: null,
+    nodeResults: {},
+    executionTrace: createTraceSkeleton(flow),
+    startedAt: now,
+    endedAt: now,
+    durationMs: 0,
   };
+}
+
+export function listFlowNodesByType(flow: StudioFlow, type: StudioNode['type']): StudioNode[] {
+  return flow.nodes.filter((node) => node.type === type);
 }

@@ -41,7 +41,7 @@ export interface StudioWebhookConfig {
   method: StudioWebhookMethod;
 }
 
-export interface StudioFlow {
+export interface StudioFlowDocument {
   id: string;
   name: string;
   description?: string;
@@ -50,10 +50,51 @@ export interface StudioFlow {
   nodes: StudioNode[];
   edges: StudioEdge[];
   isSample?: boolean;
-  ownerUserId?: string;
-  ownerTenantId?: string;
+  ownerUserId: string;
+  ownerTenantId: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export type StudioRunTriggerType = 'manual' | 'webhook' | 'chat';
+
+export interface StudioRunDocument {
+  id: string;
+  flowId: string;
+  ownerUserId: string;
+  ownerTenantId: string;
+  status: 'success' | 'failed';
+  triggeredBy: StudioRunTriggerType;
+  triggerPayload: any;
+  output: any;
+  nodeResults: Record<string, any>;
+  executionTrace?: StudioExecutionTraceStep[];
+  error?: string;
+  startedAt: string;
+  endedAt: string;
+  durationMs: number;
+}
+
+export interface StudioFlowHistoryDocument {
+  id: string;
+  flowId: string;
+  ownerUserId: string;
+  ownerTenantId: string;
+  snapshot: StudioFlowDocument;
+  reason?: string;
+  createdAt: string;
+}
+
+export interface StudioExecutionResult {
+  status: 'success' | 'failed';
+  output: any;
+  nodeResults: Record<string, any>;
+  executedNodeIds: string[];
+  executionTrace: StudioExecutionTraceStep[];
+  startedAt: string;
+  endedAt: string;
+  durationMs: number;
+  error?: string;
 }
 
 export interface StudioExecutionTraceDispatch {
@@ -77,32 +118,7 @@ export interface StudioExecutionTraceStep {
   error?: string;
 }
 
-export interface StudioRun {
-  id: string;
-  flowId: string;
-  status: 'success' | 'failed';
-  triggeredBy: 'manual' | 'webhook' | 'chat';
-  triggerPayload: any;
-  output: any;
-  nodeResults: Record<string, any>;
-  executionTrace?: StudioExecutionTraceStep[];
-  error?: string;
-  startedAt: string;
-  endedAt: string;
-  durationMs: number;
-}
-
-export interface StudioFlowHistory {
-  id: string;
-  flowId: string;
-  ownerUserId: string;
-  ownerTenantId: string;
-  snapshot: StudioFlow;
-  reason?: string;
-  createdAt: string;
-}
-
-export interface StudioCodegen {
+export interface StudioCodegenResult {
   language: 'javascript' | 'python';
   code: string;
   webhookUrl: string;
@@ -111,17 +127,4 @@ export interface StudioCodegen {
     description: string;
     files: Record<string, string>;
   };
-}
-
-export interface AuthenticatedUser {
-  id: string;
-  email: string;
-  name: string;
-  tenantId?: string;
-}
-
-export interface StudioSession {
-  id: string;
-  user: AuthenticatedUser;
-  expiresAt: string;
 }

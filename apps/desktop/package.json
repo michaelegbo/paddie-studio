@@ -7,13 +7,46 @@
   "scripts": {
     "dev": "tsx src/main.ts",
     "build": "tsc -p tsconfig.json",
-    "lint": "tsc -p tsconfig.json --noEmit"
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "dist": "pnpm build && electron-builder",
+    "dist:win": "pnpm build && electron-builder --win",
+    "dist:mac": "pnpm build && electron-builder --mac",
+    "dist:linux": "pnpm build && electron-builder --linux"
   },
   "dependencies": {
-    "electron": "^37.2.4"
+    "electron": "^37.2.4",
+    "keytar": "^7.9.0"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
+    "electron-builder": "^26.0.12",
     "tsx": "^4.20.5",
     "typescript": "^5.9.3"
+  },
+  "build": {
+    "appId": "io.paddie.studio",
+    "productName": "Paddie Studio",
+    "files": [
+      "dist/**/*",
+      "../web/dist/**/*",
+      "package.json"
+    ],
+    "protocols": [
+      {
+        "name": "Paddie Studio Auth",
+        "schemes": [
+          "studio"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }

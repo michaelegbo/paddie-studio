@@ -18,32 +18,117 @@ async function jsonRequest<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export class PaddieAuthConnector implements AuthProvider {
-  async getAuthorizationUrl(state: string): Promise<string> {
-    return `${baseUrl}/oauth/authorize?client_id=studio-web&response_type=code&scope=openid%20profile%20email&state=${encodeURIComponent(state)}`;
+  async getAuthorizationUrl(input: {
+    state: string;
+    codeChallenge: string;
+    redirectUri: string;
+    clientId?: string;
+    scope?: string;
+  }): Promise<string> {
+    const params = new URLSearchParams({
+      client_id: input.clientId ?? "studio-web",
+      response_type: "code",
+      scope: input.scope ?? "openid profile email",
+      state: input.state,
+      redirect_uri: input.redirectUri,
+      code_challenge: input.codeChallenge,
+      code_challenge_method: "S256",
+    });
+    return `${baseUrl}/oauth/authorize?${params.toString()}`;
   }
 
-  async exchangeCode(code: string, codeVerifier: string): Promise<{ accessToken: string; refreshToken?: string }> {
-    return jsonRequest<{ accessToken: string; refreshToken?: string }>("/api/studio-connect/auth/exchange", {
-      method: "POST",
-      body: JSON.stringify({ code, codeVerifier }),
+  async exchangeCode(input: {
+    code: string;
+    codeVerifier: string;
+    redirectUri: string;
+    clientId?: string;
+  }): Promise<{ accessToken: string; refreshToken?: string; idToken?: string; expiresIn?: number }> {
+    const form = new URLSearchParams({
+      grant_type: "authorization_code",
+      code: input.code,
+      code_verifier: input.codeVerifier,
+      redirect_uri: input.redirectUri,
+      client_id: input.clientId ?? "studio-web",
     });
+
+    const response = await fetch(`${baseUrl}/oauth/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: form.toString(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Paddie token exchange failed: ${response.status}`);
+    }
+
+    const payload = await response.json() as {
+      access_token: string;
+      refresh_token?: string;
+      id_token?: string;
+      expires_in?: number;
+    };
+
+    return {
+      accessToken: payload.access_token,
+      refreshToken: payload.refresh_token,
+      idToken: payload.id_token,
+      expiresIn: payload.expires_in,
+    };
   }
 
   async getUser(accessToken: string): Promise<AuthenticatedUser> {
-    return jsonRequest<AuthenticatedUser>("/oauth/userinfo", {
+    const payload = await jsonRequest<{
+      sub: string;
+      email?: string;
+      name?: string;
+    }>("/oauth/userinfo", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
+
+    return {
+      id: payload.sub,
+      email: payload.email ?? "",
+      name: payload.name ?? "Paddie User",
+    };
   }
 
-  async refresh(refreshToken: string): Promise<{ accessToken: string; refreshToken?: string }> {
-    return jsonRequest<{ accessToken: string; refreshToken?: string }>("/api/studio-connect/auth/refresh", {
-      method: "POST",
-      body: JSON.stringify({ refreshToken }),
+  async refresh(input: {
+    refreshToken: string;
+    clientId?: string;
+  }): Promise<{ accessToken: string; refreshToken?: string; idToken?: string; expiresIn?: number }> {
+    const form = new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: input.refreshToken,
+      client_id: input.clientId ?? "studio-web",
     });
+
+    const response = await fetch(`${baseUrl}/oauth/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: form.toString(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Paddie token refresh failed: ${response.status}`);
+    }
+
+    const payload = await response.json() as {
+      access_token: string;
+      refresh_token?: string;
+      id_token?: string;
+      expires_in?: number;
+    };
+
+    return {
+      accessToken: payload.access_token,
+      refreshToken: payload.refresh_token,
+      idToken: payload.id_token,
+      expiresIn: payload.expires_in,
+    };
   }
 
   async logout(token: string): Promise<void> {
-    await jsonRequest("/api/studio-connect/auth/logout", {
+    await jsonRequest("/api/auth/logout", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -51,23 +136,69 @@ export class PaddieAuthConnector implements AuthProvider {
 }
 
 export class PaddieAIConnector implements AIProvider {
-  async listModels(): Promise<string[]> {
-    const result = await jsonRequest<{ models: string[] }>("/api/studio-connect/ai/models");
-    return result.models;
+  async listModels(input?: {
+    provider?: "openai" | "azure_openai" | "groq";
+    apiKey?: string;
+    endpoint?: string;
+    apiVersion?: string;
+    deployment?: string;
+  }): Promise<Array<{ id: string; provider: string; ownedBy?: string }>> {
+    const params = new URLSearchParams();
+    if (input?.provider) params.set("provider", input.provider);
+    if (input?.apiKey) params.set("apiKey", input.apiKey);
+    if (input?.endpoint) params.set("endpoint", input.endpoint);
+    if (input?.apiVersion) params.set("apiVersion", input.apiVersion);
+    if (input?.deployment) params.set("deployment", input.deployment);
+
+    const suffix = params.toString() ? `?${params.toString()}` : "";
+    const result = await jsonRequest<{ success?: boolean; data?: Array<{ id: string; provider: string; owned_by?: string }> }>(
+      `/api/studio-connect/ai/models${suffix}`
+    );
+    return (result.data ?? []).map((item) => ({
+      id: item.id,
+      provider: item.provider,
+      ownedBy: item.owned_by,
+    }));
   }
 
-  async complete(prompt: string, model?: string): Promise<{ output: string; model: string }> {
-    return jsonRequest<{ output: string; model: string }>("/api/studio-connect/ai/complete", {
+  async complete(input: {
+    provider?: "openai" | "azure_openai" | "groq";
+    prompt?: string;
+    messages?: Array<{ role: string; content: string }>;
+    model?: string;
+    deployment?: string;
+    apiKey?: string;
+    endpoint?: string;
+    apiVersion?: string;
+    temperature?: number;
+    maxTokens?: number;
+  }): Promise<{ output: string; model: string; provider: string; raw?: unknown }> {
+    const result = await jsonRequest<{ success?: boolean; data?: any }>("/api/studio-connect/ai/complete", {
       method: "POST",
-      body: JSON.stringify({ prompt, model }),
+      body: JSON.stringify(input),
     });
+
+    const data = result.data ?? {};
+    return {
+      output: data.text ?? "",
+      model: data.model ?? input.model ?? input.deployment ?? "unknown",
+      provider: data.provider ?? input.provider ?? "azure_openai",
+      raw: data,
+    };
   }
 
-  async chat(messages: Array<{ role: string; content: string }>, model?: string): Promise<{ output: string; model: string }> {
-    return jsonRequest<{ output: string; model: string }>("/api/studio-connect/ai/complete", {
-      method: "POST",
-      body: JSON.stringify({ messages, model }),
-    });
+  async chat(input: {
+    provider?: "openai" | "azure_openai" | "groq";
+    messages: Array<{ role: string; content: string }>;
+    model?: string;
+    deployment?: string;
+    apiKey?: string;
+    endpoint?: string;
+    apiVersion?: string;
+    temperature?: number;
+    maxTokens?: number;
+  }): Promise<{ output: string; model: string; provider: string; raw?: unknown }> {
+    return this.complete(input);
   }
 }
 

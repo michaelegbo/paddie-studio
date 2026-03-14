@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@paddie-studio/ui";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
+import { LaunchStudioButton } from "../components/LaunchStudioButton";
 
 export default function HomePage() {
   return (
@@ -14,7 +15,7 @@ export default function HomePage() {
             <h1>Build AI workflows visually and ship them to web, code, or desktop.</h1>
             <p>Paddie Studio turns webhooks, memory, AI inference, orchestration, and API calls into a visual builder with live execution traces and generated code.</p>
             <div className="hero-actions" style={{ marginTop: 22 }}>
-              <Link href="/app"><Button>Launch Studio</Button></Link>
+              <LaunchStudioButton />
               <Link href="/download"><Button variant="ghost">Download Desktop</Button></Link>
             </div>
             <div className="stats-grid" style={{ marginTop: 28 }}>

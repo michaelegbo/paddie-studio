@@ -31,8 +31,25 @@ services:
       dockerfile: apps/server/Dockerfile
     environment:
       PORT: 4300
-      PADDIE_API_BASE_URL: https://api.paddie.io
-      PUBLIC_BASE_URL: https://studio.paddie.io
+      PADDIE_API_BASE_URL: ${PADDIE_API_BASE_URL:-https://api.paddie.io}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://studio.paddie.io}
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017}
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-studio_prod}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      REDIS_PREFIX: ${REDIS_PREFIX:-studio:}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      PADDIE_OIDC_ISSUER: ${PADDIE_OIDC_ISSUER:-https://api.paddie.io}
+      STUDIO_OIDC_CLIENT_ID_WEB: ${STUDIO_OIDC_CLIENT_ID_WEB:-studio-web}
+      STUDIO_OIDC_CLIENT_ID_DESKTOP: ${STUDIO_OIDC_CLIENT_ID_DESKTOP:-studio-desktop}
+      STUDIO_OIDC_REDIRECT_URI_WEB: ${STUDIO_OIDC_REDIRECT_URI_WEB:-https://studio.paddie.io/auth/callback}
+      STUDIO_OIDC_REDIRECT_URI_DESKTOP: ${STUDIO_OIDC_REDIRECT_URI_DESKTOP:-studio://auth/callback}
+      STUDIO_OIDC_SCOPE: ${STUDIO_OIDC_SCOPE:-openid profile email}
+      STUDIO_JWT_SECRET: ${STUDIO_JWT_SECRET:-replace-me}
+      STUDIO_JWT_EXPIRES: ${STUDIO_JWT_EXPIRES:-15m}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY:-}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT:-}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION:-2024-02-15-preview}
+      AZURE_OPENAI_DEPLOYMENT_NAME: ${AZURE_OPENAI_DEPLOYMENT_NAME:-gpt-4.1}
     expose:
       - "4300"
     networks:
