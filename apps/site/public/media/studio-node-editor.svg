@@ -1,0 +1,52 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Studio Node Editor Preview</title>
+  <desc id="desc">Node modal with no-code field mapping suggestions.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0911" />
+      <stop offset="100%" stop-color="#141327" />
+    </linearGradient>
+    <linearGradient id="modal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111827" stop-opacity="0.94" />
+      <stop offset="100%" stop-color="#1f2937" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="720" rx="24" fill="url(#bg)" />
+  <rect x="116" y="74" width="968" height="572" rx="22" fill="url(#modal)" stroke="rgba(148,163,184,0.5)" />
+
+  <text x="156" y="132" fill="#f8fafc" font-size="34" font-weight="700" font-family="Inter, Segoe UI, sans-serif">HTTP Request Node</text>
+  <text x="156" y="166" fill="#93c5fd" font-size="16" font-family="Inter, Segoe UI, sans-serif">Configure method, URL, body mapping, and test in-place.</text>
+
+  <rect x="156" y="202" width="300" height="56" rx="12" fill="#0f172a" stroke="#334155" />
+  <text x="176" y="236" fill="#e2e8f0" font-size="20" font-family="Inter, Segoe UI, sans-serif">Method: POST</text>
+
+  <rect x="472" y="202" width="572" height="56" rx="12" fill="#0f172a" stroke="#334155" />
+  <text x="492" y="236" fill="#e2e8f0" font-size="20" font-family="Inter, Segoe UI, sans-serif">URL: https://api.example.com/orders/{{trigger.body.orderId}}</text>
+
+  <rect x="156" y="282" width="568" height="324" rx="14" fill="#020617" stroke="#334155" />
+  <text x="178" y="318" fill="#a5b4fc" font-size="15" font-family="Inter, Segoe UI, sans-serif">Request Body</text>
+  <text x="178" y="356" fill="#e2e8f0" font-size="18" font-family="JetBrains Mono, Consolas, monospace">{</text>
+  <text x="208" y="390" fill="#f8fafc" font-size="18" font-family="JetBrains Mono, Consolas, monospace">"customerId": "{{trigger.body.customerId}}",</text>
+  <text x="208" y="424" fill="#f8fafc" font-size="18" font-family="JetBrains Mono, Consolas, monospace">"items": {{http_fetch_products.response.items}},</text>
+  <text x="208" y="458" fill="#f8fafc" font-size="18" font-family="JetBrains Mono, Consolas, monospace">"priority": "high"</text>
+  <text x="178" y="492" fill="#e2e8f0" font-size="18" font-family="JetBrains Mono, Consolas, monospace">}</text>
+
+  <rect x="744" y="282" width="300" height="324" rx="14" fill="#0b1220" stroke="#334155" />
+  <text x="766" y="318" fill="#bfdbfe" font-size="15" font-family="Inter, Segoe UI, sans-serif">Available Fields</text>
+
+  <rect x="766" y="342" width="256" height="56" rx="12" fill="#1d4ed8" fill-opacity="0.2" stroke="#60a5fa" />
+  <text x="782" y="377" fill="#dbeafe" font-size="16" font-family="Inter, Segoe UI, sans-serif">trigger.body.customerId</text>
+
+  <rect x="766" y="414" width="256" height="56" rx="12" fill="#059669" fill-opacity="0.2" stroke="#6ee7b7" />
+  <text x="782" y="449" fill="#d1fae5" font-size="16" font-family="Inter, Segoe UI, sans-serif">http_fetch_products.response.items</text>
+
+  <rect x="766" y="486" width="256" height="56" rx="12" fill="#7c3aed" fill-opacity="0.2" stroke="#c4b5fd" />
+  <text x="782" y="521" fill="#ede9fe" font-size="16" font-family="Inter, Segoe UI, sans-serif">memory_router.output.summary</text>
+
+  <rect x="156" y="626" width="152" height="40" rx="999" fill="#2563eb" />
+  <text x="196" y="652" fill="#fff" font-size="18" font-weight="600" font-family="Inter, Segoe UI, sans-serif">Apply</text>
+
+  <rect x="324" y="626" width="172" height="40" rx="999" fill="#0f172a" stroke="#475569" />
+  <text x="364" y="652" fill="#e2e8f0" font-size="18" font-weight="600" font-family="Inter, Segoe UI, sans-serif">Test Node</text>
+</svg>

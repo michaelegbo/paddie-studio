@@ -1,0 +1,79 @@
+name: Desktop Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: win
+            artifact_glob: apps/desktop/release/*.exe
+          - os: macos-latest
+            target: mac
+            artifact_glob: apps/desktop/release/*.dmg
+          - os: ubuntu-latest
+            target: linux
+            artifact_glob: apps/desktop/release/*.AppImage
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web renderer
+        run: pnpm --filter @paddie-studio/web build
+
+      - name: Build desktop package
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: pnpm --filter @paddie-studio/desktop dist:${{ matrix.target }}
+
+      - name: Upload platform artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio-${{ matrix.target }}
+          path: ${{ matrix.artifact_glob }}
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

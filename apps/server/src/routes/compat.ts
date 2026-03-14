@@ -293,7 +293,15 @@ compatRouter.post('/codegen/:flowId', async (req: AuthenticatedRequest, res) => 
 
     const webhookUrl = `${req.protocol}://${req.get('host')}/api/webhooks/${flow.id}/${flow.webhook.id}`;
     const codegen = codegenService.generate(flow, payload.language || 'javascript', webhookUrl);
-    res.json({ success: true, data: codegen });
+    const artifact = await flowService.createArtifact({
+      flowId: flow.id,
+      ownerUserId: flow.ownerUserId,
+      ownerTenantId: flow.ownerTenantId,
+      type: 'codegen',
+      language: payload.language || 'javascript',
+      payload: codegen,
+    });
+    res.json({ success: true, data: { ...codegen, artifactId: artifact.id } });
   } catch (error) {
     logger.error('Compat codegen failed:', error);
     res.status(400).json({ success: false, error: error instanceof Error ? error.message : 'Codegen failed' });

@@ -85,6 +85,17 @@ export interface StudioFlowHistoryDocument {
   createdAt: string;
 }
 
+export interface StudioArtifactDocument {
+  id: string;
+  flowId: string;
+  ownerUserId: string;
+  ownerTenantId: string;
+  type: 'codegen' | 'trace' | 'export';
+  language?: 'javascript' | 'python';
+  payload: any;
+  createdAt: string;
+}
+
 export interface StudioExecutionResult {
   status: 'success' | 'failed';
   output: any;

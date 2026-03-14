@@ -1,4 +1,6 @@
 import { config } from '../config';
+import { createHash } from 'node:crypto';
+import { RedisService } from './redis.service';
 
 export type StudioAIProvider = 'openai' | 'azure_openai' | 'groq';
 
@@ -50,8 +52,11 @@ export interface StudioAIModelInfo {
 
 export class StudioAIProviderService {
   private static instance: StudioAIProviderService;
+  private redis: RedisService;
 
-  private constructor() {}
+  private constructor() {
+    this.redis = RedisService.getInstance();
+  }
 
   static getInstance(): StudioAIProviderService {
     if (!StudioAIProviderService.instance) {
@@ -75,13 +80,38 @@ export class StudioAIProviderService {
   }
 
   async listModels(options: StudioAIModelListOptions): Promise<StudioAIModelInfo[]> {
+    const cacheKey = this.buildModelCacheKey(options);
+    const cached = await this.redis.getJson<StudioAIModelInfo[]>(cacheKey);
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      return cached;
+    }
+
+    let models: StudioAIModelInfo[];
     if (options.provider === 'azure_openai') {
-      return this.listAzureModels(options);
+      models = await this.listAzureModels(options);
+    } else if (options.provider === 'groq') {
+      models = await this.listOpenAICompatibleModels(options, 'groq');
+    } else {
+      models = await this.listOpenAICompatibleModels(options, 'openai');
     }
-    if (options.provider === 'groq') {
-      return this.listOpenAICompatibleModels(options, 'groq');
-    }
-    return this.listOpenAICompatibleModels(options, 'openai');
+
+    await this.redis.setJson(cacheKey, models, 300);
+    return models;
+  }
+
+  private buildModelCacheKey(options: StudioAIModelListOptions): string {
+    const hash = createHash('sha1')
+      .update(
+        JSON.stringify({
+          provider: options.provider,
+          endpoint: options.endpoint || '',
+          apiVersion: options.apiVersion || '',
+          deployment: options.deployment || '',
+          hasKey: Boolean(options.apiKey),
+        })
+      )
+      .digest('hex');
+    return `ai-models:${hash}`;
   }
 
   private async completeOpenAICompatible(

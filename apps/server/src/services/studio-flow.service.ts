@@ -1,6 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { MongoDBService } from './mongodb.service';
+import { RedisService } from './redis.service';
 import {
+  StudioArtifactDocument,
   StudioFlowDocument,
   StudioFlowHistoryDocument,
   StudioNode,
@@ -51,10 +53,12 @@ type StudioSampleTemplateId =
 export class StudioFlowService {
   private static instance: StudioFlowService;
   private mongodb: MongoDBService;
+  private redis: RedisService;
   private indexesEnsured = false;
 
   private constructor() {
     this.mongodb = MongoDBService.getInstance();
+    this.redis = RedisService.getInstance();
   }
 
   static getInstance(): StudioFlowService {
@@ -759,6 +763,7 @@ export class StudioFlowService {
   async createRun(run: StudioRunDocument): Promise<void> {
     await this.ensureIndexes();
     await this.runsCollection().insertOne(run);
+    await this.redis.setJson(`run:${run.id}`, run, 86400);
   }
 
   async listRuns(flowId: string, scope: OwnerScope, limit = 20): Promise<StudioRunDocument[]> {
@@ -779,12 +784,34 @@ export class StudioFlowService {
 
   async getRunById(runId: string, scope: OwnerScope): Promise<StudioRunDocument | null> {
     await this.ensureIndexes();
+    const cached = await this.redis.getJson<StudioRunDocument>(`run:${runId}`);
+    if (cached && cached.ownerUserId === scope.userId && cached.ownerTenantId === scope.tenantId) {
+      return cached;
+    }
+
     const doc = await this.runsCollection().findOne({
       id: runId,
       ownerUserId: scope.userId,
       ownerTenantId: scope.tenantId,
     });
-    return doc ? this.toRunDocument(doc) : null;
+    const normalized = doc ? this.toRunDocument(doc) : null;
+    if (normalized) {
+      await this.redis.setJson(`run:${runId}`, normalized, 86400);
+    }
+    return normalized;
+  }
+
+  async createArtifact(input: Omit<StudioArtifactDocument, 'id' | 'createdAt'>): Promise<StudioArtifactDocument> {
+    await this.ensureIndexes();
+
+    const artifact: StudioArtifactDocument = {
+      id: `studio_art_${randomUUID()}`,
+      createdAt: new Date().toISOString(),
+      ...input,
+    };
+
+    await this.artifactsCollection().insertOne(artifact);
+    return artifact;
   }
 
   private flowsCollection() {
@@ -797,6 +824,10 @@ export class StudioFlowService {
 
   private historyCollection() {
     return this.mongodb.collection('studio_flow_history');
+  }
+
+  private artifactsCollection() {
+    return this.mongodb.collection('studio_artifacts');
   }
 
   private toFlowDocument(doc: any): StudioFlowDocument {

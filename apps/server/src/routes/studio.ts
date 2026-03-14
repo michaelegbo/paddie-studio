@@ -833,10 +833,21 @@ router.get('/flows/:flowId/codegen', async (req: AuthenticatedRequest, res: Resp
 
     const webhookUrl = `${req.protocol}://${req.get('host')}/api/webhooks/${flow.id}/${flow.webhook.id}`;
     const codegen = codegenService.generate(flow, language, webhookUrl);
+    const artifact = await flowService.createArtifact({
+      flowId: flow.id,
+      ownerUserId: flow.ownerUserId,
+      ownerTenantId: flow.ownerTenantId,
+      type: 'codegen',
+      language,
+      payload: codegen,
+    });
 
     return res.json({
       success: true,
-      data: codegen,
+      data: {
+        ...codegen,
+        artifactId: artifact.id,
+      },
     });
   } catch (error) {
     logger.error('Failed to generate Studio code:', error);

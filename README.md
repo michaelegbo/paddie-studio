@@ -69,6 +69,20 @@ pnpm dev:desktop
 - `studio-server`
 - `studio-edge` (nginx path router for `/`, `/app`, `/api`)
 
+## Deployment Verification
+
+Run smoke checks for the hosted stack:
+
+```bash
+pnpm verify:deploy
+```
+
+Optional env overrides:
+
+- `STUDIO_BASE_URL` (default `https://studio.paddie.io`)
+- `PADDIE_OIDC_ISSUER` (default `https://api.paddie.io`)
+- `STUDIO_SMOKE_TIMEOUT_MS` (default `15000`)
+
 ## Desktop Distribution
 
 Desktop build scripts:

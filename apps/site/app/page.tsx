@@ -3,6 +3,7 @@ import { Button } from "@paddie-studio/ui";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { LaunchStudioButton } from "../components/LaunchStudioButton";
+import ShowcaseGallery from "../components/ShowcaseGallery";
 
 export default function HomePage() {
   return (
@@ -45,6 +46,32 @@ export default function HomePage() {
             <div className="card"><strong>Visual Builder</strong><p>Modal-first node editing, mapping, run history, and traces.</p></div>
             <div className="card"><strong>AI Orchestration</strong><p>Use AI nodes, orchestrator nodes, and connected APIs in one board.</p></div>
             <div className="card"><strong>Desktop Delivery</strong><p>Electron app opens to login and talks to the same hosted backend.</p></div>
+          </div>
+        </div>
+      </section>
+      <ShowcaseGallery />
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <h2>Ship Automations To Webhooks, Chat, and Code</h2>
+            <p>
+              Author visually, test every node, then publish a webhook endpoint and generated code for JavaScript,
+              Python, and StackBlitz demos.
+            </p>
+          </div>
+          <div className="feature-grid">
+            <div className="card">
+              <strong>Webhook-first APIs</strong>
+              <p>Each flow has a secured webhook path for direct backend integration.</p>
+            </div>
+            <div className="card">
+              <strong>Node-level Testing</strong>
+              <p>Run one node in isolation with scoped input/output validation before full execution.</p>
+            </div>
+            <div className="card">
+              <strong>Desktop + Web</strong>
+              <p>Use the same Studio backend from browser or Electron with secure OIDC login.</p>
+            </div>
           </div>
         </div>
       </section>

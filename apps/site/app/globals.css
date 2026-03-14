@@ -24,10 +24,19 @@ main { min-height: 100vh; }
 .section-head { max-width: 760px; margin-bottom: 24px; }
 .feature-grid, .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.showcase-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .card, .stat, .auth-card, .download-card { padding: 20px; }
+.showcase-card { border: 1px solid #221E3C; background: #111019; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+.showcase-media { position: relative; aspect-ratio: 16 / 10; border-bottom: 1px solid rgba(255,255,255,0.08); background: #090812; }
+.showcase-copy { padding: 16px 18px 20px; }
+.showcase-copy h3 { margin: 0 0 10px; font-size: 1.05rem; }
+.showcase-copy p { margin: 0; color: #9B9DB3; line-height: 1.5; }
+.list-clean { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; color: #CBD5E1; }
+.list-clean li { position: relative; padding-left: 18px; }
+.list-clean li::before { content: ''; position: absolute; left: 2px; top: 9px; width: 8px; height: 8px; border-radius: 999px; background: #3D73DD; }
 .auth-wrap, .download-wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
 .auth-card, .download-card { width: min(100%, 460px); }
 input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: white; }
 label { display: block; margin: 14px 0 8px; color: #D3D3D3; }
 footer { border-top: 1px solid rgba(255,255,255,0.08); }
-@media (max-width: 960px) { .hero-grid, .feature-grid, .stats-grid { grid-template-columns: 1fr; } .nav-inner, .footer-inner { flex-direction: column; align-items: flex-start; } .preview { min-height: 320px; } }
+@media (max-width: 960px) { .hero-grid, .feature-grid, .stats-grid, .showcase-grid { grid-template-columns: 1fr; } .nav-inner, .footer-inner { flex-direction: column; align-items: flex-start; } .preview { min-height: 320px; } }

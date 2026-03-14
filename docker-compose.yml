@@ -35,7 +35,7 @@ services:
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://studio.paddie.io}
       MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017}
       MONGODB_DATABASE: ${MONGODB_DATABASE:-studio_prod}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      REDIS_URL: ${REDIS_URL:-}
       REDIS_PREFIX: ${REDIS_PREFIX:-studio:}
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       PADDIE_OIDC_ISSUER: ${PADDIE_OIDC_ISSUER:-https://api.paddie.io}

@@ -1,0 +1,91 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Studio Builder Canvas Preview</title>
+  <desc id="desc">Webhook to AI orchestration flow running through Studio canvas.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#090912" />
+      <stop offset="100%" stop-color="#15142a" />
+    </linearGradient>
+    <linearGradient id="nodeA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0.25"/>
+    </linearGradient>
+    <linearGradient id="nodeB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="nodeC" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.25"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="720" rx="24" fill="url(#bg)" />
+  <g opacity="0.16">
+    <path d="M0 80H1200" stroke="#fff" />
+    <path d="M0 160H1200" stroke="#fff" />
+    <path d="M0 240H1200" stroke="#fff" />
+    <path d="M0 320H1200" stroke="#fff" />
+    <path d="M0 400H1200" stroke="#fff" />
+    <path d="M0 480H1200" stroke="#fff" />
+    <path d="M0 560H1200" stroke="#fff" />
+    <path d="M0 640H1200" stroke="#fff" />
+    <path d="M80 0V720" stroke="#fff" />
+    <path d="M160 0V720" stroke="#fff" />
+    <path d="M240 0V720" stroke="#fff" />
+    <path d="M320 0V720" stroke="#fff" />
+    <path d="M400 0V720" stroke="#fff" />
+    <path d="M480 0V720" stroke="#fff" />
+    <path d="M560 0V720" stroke="#fff" />
+    <path d="M640 0V720" stroke="#fff" />
+    <path d="M720 0V720" stroke="#fff" />
+    <path d="M800 0V720" stroke="#fff" />
+    <path d="M880 0V720" stroke="#fff" />
+    <path d="M960 0V720" stroke="#fff" />
+    <path d="M1040 0V720" stroke="#fff" />
+    <path d="M1120 0V720" stroke="#fff" />
+  </g>
+
+  <ellipse cx="1040" cy="110" rx="180" ry="120" fill="#3b82f6" opacity="0.2" filter="url(#soft)" />
+  <ellipse cx="180" cy="620" rx="220" ry="130" fill="#8b5cf6" opacity="0.18" filter="url(#soft)" />
+
+  <path d="M280 180 C390 180 430 275 520 275" stroke="#7dd3fc" stroke-width="4" fill="none" stroke-linecap="round" />
+  <path d="M640 275 C740 275 760 370 850 370" stroke="#86efac" stroke-width="4" fill="none" stroke-linecap="round" />
+  <path d="M640 275 C700 275 690 480 860 500" stroke="#c4b5fd" stroke-width="4" fill="none" stroke-linecap="round" />
+
+  <g transform="translate(140 120)">
+    <rect width="180" height="120" rx="16" fill="url(#nodeA)" stroke="#67e8f9" stroke-opacity="0.45" />
+    <text x="18" y="34" fill="#bae6fd" font-size="14" font-family="Inter, Segoe UI, sans-serif" letter-spacing="1">TRIGGER</text>
+    <text x="18" y="68" fill="#fff" font-size="26" font-weight="700" font-family="Inter, Segoe UI, sans-serif">Webhook</text>
+    <text x="18" y="96" fill="#cbd5e1" font-size="14" font-family="Inter, Segoe UI, sans-serif">POST /orders/create</text>
+  </g>
+
+  <g transform="translate(500 215)">
+    <rect width="180" height="120" rx="16" fill="url(#nodeB)" stroke="#6ee7b7" stroke-opacity="0.45" />
+    <text x="18" y="34" fill="#a7f3d0" font-size="14" font-family="Inter, Segoe UI, sans-serif" letter-spacing="1">ACTION</text>
+    <text x="18" y="68" fill="#fff" font-size="26" font-weight="700" font-family="Inter, Segoe UI, sans-serif">HTTP GET</text>
+    <text x="18" y="96" fill="#d1fae5" font-size="14" font-family="Inter, Segoe UI, sans-serif">Fetch CRM record</text>
+  </g>
+
+  <g transform="translate(820 310)">
+    <rect width="210" height="130" rx="16" fill="url(#nodeC)" stroke="#c084fc" stroke-opacity="0.45" />
+    <text x="18" y="36" fill="#ddd6fe" font-size="14" font-family="Inter, Segoe UI, sans-serif" letter-spacing="1">INTELLIGENCE</text>
+    <text x="18" y="74" fill="#fff" font-size="26" font-weight="700" font-family="Inter, Segoe UI, sans-serif">AI Node</text>
+    <text x="18" y="104" fill="#e9d5ff" font-size="14" font-family="Inter, Segoe UI, sans-serif">Model: gpt-4.1</text>
+  </g>
+
+  <g transform="translate(830 455)">
+    <rect width="230" height="140" rx="16" fill="rgba(244, 114, 182, 0.22)" stroke="#f9a8d4" stroke-opacity="0.4" />
+    <text x="18" y="36" fill="#fbcfe8" font-size="14" font-family="Inter, Segoe UI, sans-serif" letter-spacing="1">OUTPUT</text>
+    <text x="18" y="74" fill="#fff" font-size="26" font-weight="700" font-family="Inter, Segoe UI, sans-serif">Result</text>
+    <text x="18" y="104" fill="#fbcfe8" font-size="14" font-family="Inter, Segoe UI, sans-serif">200 OK, JSON payload</text>
+  </g>
+
+  <g transform="translate(40 36)">
+    <rect width="430" height="52" rx="12" fill="rgba(15, 23, 42, 0.82)" stroke="rgba(148,163,184,0.35)" />
+    <text x="20" y="33" fill="#e2e8f0" font-size="18" font-weight="600" font-family="Inter, Segoe UI, sans-serif">Paddie Studio Canvas - Run Trace</text>
+  </g>
+</svg>

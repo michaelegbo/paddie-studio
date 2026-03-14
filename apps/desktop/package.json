@@ -26,6 +26,9 @@
   "build": {
     "appId": "io.paddie.studio",
     "productName": "Paddie Studio",
+    "directories": {
+      "output": "release"
+    },
     "files": [
       "dist/**/*",
       "../web/dist/**/*",

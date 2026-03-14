@@ -13,8 +13,10 @@ const KEYCHAIN_ACCOUNT = 'studio-session';
 const studioBaseUrl = (process.env.STUDIO_PUBLIC_BASE_URL || 'https://studio.paddie.io').replace(/\/$/, '');
 const studioLoginUrl = `${studioBaseUrl}/login`;
 const studioAppUrl = `${studioBaseUrl}/app`;
+const apiOrigin = new URL(studioBaseUrl).origin;
 
 let mainWindow: BrowserWindow | null = null;
+let securityHooksAttached = false;
 
 function resolveLocalRendererPath(): string {
   const inDist = path.resolve(__dirname, '../../web/dist/index.html');
@@ -180,6 +182,61 @@ async function createWindow(): Promise<void> {
   await mainWindow.loadURL(stored?.sessionId ? studioAppUrl : studioLoginUrl);
 }
 
+function appendSecurityHeaders(
+  headers: Record<string, string | string[]>
+): Record<string, string | string[]> {
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https:",
+    `connect-src 'self' ${apiOrigin} https://api.paddie.io wss://studio.paddie.io`,
+    "font-src 'self' data:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self' https://studio.paddie.io",
+  ].join('; ');
+
+  return {
+    ...headers,
+    'Content-Security-Policy': [csp],
+  };
+}
+
+function attachDesktopSecurityHooks(): void {
+  if (securityHooksAttached) return;
+  securityHooksAttached = true;
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const isStudioResource =
+      details.url.startsWith(studioBaseUrl) || details.url.startsWith('file://');
+
+    if (!isStudioResource) {
+      callback({ responseHeaders: details.responseHeaders });
+      return;
+    }
+
+    callback({
+      responseHeaders: appendSecurityHeaders((details.responseHeaders || {}) as Record<string, string | string[]>),
+    });
+  });
+
+  session.defaultSession.webRequest.onCompleted(
+    {
+      urls: [`${studioBaseUrl}/api/auth/logout*`],
+    },
+    async (details) => {
+      if (details.statusCode >= 200 && details.statusCode < 400) {
+        await clearStoredSession();
+        await clearStudioSessionCookie();
+        if (mainWindow) {
+          await mainWindow.loadURL(studioLoginUrl);
+        }
+      }
+    }
+  );
+}
+
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
   app.quit();
@@ -198,6 +255,7 @@ if (!gotLock) {
 
   app.whenReady().then(async () => {
     app.setAsDefaultProtocolClient('studio');
+    attachDesktopSecurityHooks();
 
     await createWindow();
 
