@@ -1,7 +1,7 @@
 import type { NextFunction, Response } from 'express';
-import type { AuthenticatedRequest } from './jwt.middleware';
-import { verifyToken } from './jwt.middleware';
-import { SessionService } from '../services/session.service';
+import type { AuthenticatedRequest } from './jwt.middleware.js';
+import { verifyToken } from './jwt.middleware.js';
+import { SessionService } from '../services/session.service.js';
 
 const sessionService = SessionService.getInstance();
 

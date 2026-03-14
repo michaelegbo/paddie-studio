@@ -1,6 +1,6 @@
 import type { Request } from 'express';
 import jwt from 'jsonwebtoken';
-import { config } from '../config';
+import { config } from '../config.js';
 
 export interface AuthenticatedUserContext {
   userId: string;

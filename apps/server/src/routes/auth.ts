@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { config } from '../config';
-import { OIDCService } from '../services/oidc.service';
-import { SessionService } from '../services/session.service';
-import { logger } from '../utils/logger';
+import { config } from '../config.js';
+import { OIDCService } from '../services/oidc.service.js';
+import { SessionService } from '../services/session.service.js';
+import { logger } from '../utils/logger.js';
 
 const oidc = OIDCService.getInstance();
 const sessions = SessionService.getInstance();

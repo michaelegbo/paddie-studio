@@ -1,6 +1,6 @@
 import { Collection, Db, Document, MongoClient } from 'mongodb';
-import { config } from '../config';
-import { logger } from '../utils/logger';
+import { config } from '../config.js';
+import { logger } from '../utils/logger.js';
 
 export class MongoDBService {
   private static instance: MongoDBService;

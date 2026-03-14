@@ -1,4 +1,4 @@
-import { config } from '../config';
+import { config } from '../config.js';
 import {
   StudioEdge,
   StudioExecutionResult,
@@ -6,11 +6,11 @@ import {
   StudioExecutionTraceStep,
   StudioFlowDocument,
   StudioNode,
-} from '../types/studio.types';
+} from '../types/studio.types.js';
 import {
   StudioAIProvider,
   StudioAIProviderService,
-} from './studio-ai-provider.service';
+} from './studio-ai-provider.service.js';
 
 interface NodeRuntimeContext {
   trigger: any;

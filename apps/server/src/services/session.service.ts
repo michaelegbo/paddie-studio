@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { MongoDBService } from './mongodb.service';
+import { MongoDBService } from './mongodb.service.js';
 
 export interface StudioSessionRecord {
   id: string;

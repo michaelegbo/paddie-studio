@@ -1,6 +1,6 @@
-import { config } from '../config';
+import { config } from '../config.js';
 import { createHash } from 'node:crypto';
-import { RedisService } from './redis.service';
+import { RedisService } from './redis.service.js';
 
 export type StudioAIProvider = 'openai' | 'azure_openai' | 'groq';
 

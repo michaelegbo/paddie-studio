@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { MongoDBService } from './mongodb.service';
-import { RedisService } from './redis.service';
+import { MongoDBService } from './mongodb.service.js';
+import { RedisService } from './redis.service.js';
 import {
   StudioArtifactDocument,
   StudioFlowDocument,
@@ -8,8 +8,8 @@ import {
   StudioNode,
   StudioRunDocument,
   StudioWebhookMethod,
-} from '../types/studio.types';
-import { logger } from '../utils/logger';
+} from '../types/studio.types.js';
+import { logger } from '../utils/logger.js';
 
 interface StudioFlowCreateInput {
   name?: string;

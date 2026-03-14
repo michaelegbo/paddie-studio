@@ -1,14 +1,14 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
-import { authenticateRequestContext } from '../middleware/auth.middleware';
-import { AuthenticatedRequest } from '../middleware/jwt.middleware';
-import { StudioFlowService } from '../services/studio-flow.service';
-import { StudioExecutionService } from '../services/studio-execution.service';
-import { StudioCodegenService } from '../services/studio-codegen.service';
-import { StudioAIProviderService } from '../services/studio-ai-provider.service';
-import { logger } from '../utils/logger';
-import { StudioFlowStatus, StudioWebhookMethod } from '../types/studio.types';
+import { authenticateRequestContext } from '../middleware/auth.middleware.js';
+import { AuthenticatedRequest } from '../middleware/jwt.middleware.js';
+import { StudioFlowService } from '../services/studio-flow.service.js';
+import { StudioExecutionService } from '../services/studio-execution.service.js';
+import { StudioCodegenService } from '../services/studio-codegen.service.js';
+import { StudioAIProviderService } from '../services/studio-ai-provider.service.js';
+import { logger } from '../utils/logger.js';
+import { StudioFlowStatus, StudioWebhookMethod } from '../types/studio.types.js';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-import type { AuthenticatedUserContext } from './middleware/jwt.middleware';
-import type { StudioSessionRecord } from './services/session.service';
+import type { AuthenticatedUserContext } from './middleware/jwt.middleware.js';
+import type { StudioSessionRecord } from './services/session.service.js';
 
 declare global {
   namespace Express {

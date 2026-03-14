@@ -1,5 +1,5 @@
 import { RuntimeCodegenService } from '@paddie-studio/runtime';
-import { StudioCodegenResult, StudioFlowDocument } from '../types/studio.types';
+import { StudioCodegenResult, StudioFlowDocument } from '../types/studio.types.js';
 
 export class StudioCodegenService {
   private static instance: StudioCodegenService;
