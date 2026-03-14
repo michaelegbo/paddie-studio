@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 interface ShowcaseItem {
   title: string;
@@ -8,38 +8,38 @@ interface ShowcaseItem {
 
 const showcaseItems: ShowcaseItem[] = [
   {
-    title: 'Visual Builder Canvas',
-    description: 'Build flows with webhook, AI, memory, loop, and output nodes while seeing trace playback in real time.',
-    src: '/media/studio-canvas-demo.svg',
+    title: "Canvas View",
+    description: "Build complete webhook-to-output automations visually with clear execution movement.",
+    src: "/media/studio-canvas-demo.svg",
   },
   {
-    title: 'No-Code Node Editor',
-    description: 'Configure HTTP, memory, and mapping fields with suggestions and drag/drop variables without writing code.',
-    src: '/media/studio-node-editor.svg',
+    title: "Node Modal Editor",
+    description: "Configure requests, memory actions, and mappings with guided no-code controls.",
+    src: "/media/studio-node-editor.svg",
   },
   {
-    title: 'Chat + Orchestrator',
-    description: 'Chat with orchestrated AI flows that can call connected HTTP and memory tools and reply with context.',
-    src: '/media/studio-chat-orchestrator.svg',
+    title: "Chat Orchestrator",
+    description: "Run conversational workflows that call tools and memory before producing a final answer.",
+    src: "/media/studio-chat-orchestrator.svg",
   },
 ];
 
 export default function ShowcaseGallery() {
   return (
-    <section className="section">
+    <section className="section soft">
       <div className="container">
-        <div className="section-head">
-          <h2>Studio In Action</h2>
+        <div className="section-head fade-up">
+          <h2>Inside The Builder</h2>
           <p>
-            These captures come from the standalone Studio flow builder and show the canvas,
-            modal editing, and orchestrator chat workflow.
+            Studio ships with the same dark, high-contrast Paddie visual style while keeping node
+            operations simple for non-technical users.
           </p>
         </div>
         <div className="showcase-grid">
-          {showcaseItems.map((item) => (
-            <article key={item.title} className="showcase-card">
+          {showcaseItems.map((item, index) => (
+            <article key={item.title} className={`showcase-card fade-up delay-${Math.min(index + 1, 3)}`}>
               <div className="showcase-media">
-                <Image src={item.src} alt={item.title} fill sizes="(max-width: 900px) 100vw, 33vw" />
+                <Image src={item.src} alt={item.title} fill sizes="(max-width: 1060px) 100vw, 33vw" />
               </div>
               <div className="showcase-copy">
                 <h3>{item.title}</h3>
@@ -52,3 +52,4 @@ export default function ShowcaseGallery() {
     </section>
   );
 }
+

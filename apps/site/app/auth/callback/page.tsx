@@ -9,10 +9,12 @@ export default function AuthCallbackPage() {
   }, []);
 
   return (
-    <main className="auth-wrap">
-      <div className="auth-card">
-        <strong>Completing login...</strong>
-      </div>
+    <main className="auth-shell">
+      <section className="auth-panel fade-up">
+        <h1 className="auth-title" style={{ marginTop: 0 }}>Completing login...</h1>
+        <p className="auth-copy">Finalizing secure OIDC callback and redirecting to Studio.</p>
+      </section>
     </main>
   );
 }
+

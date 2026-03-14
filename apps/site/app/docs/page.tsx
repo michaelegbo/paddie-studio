@@ -6,30 +6,27 @@ import { Navbar } from "../../components/Navbar";
 const docsSections = [
   {
     title: "Quick Start",
-    points: [
-      "Create a flow and add a webhook trigger node.",
-      "Add HTTP, AI, memory, and output nodes.",
-      "Open node modal editors and map fields using variable suggestions.",
-      "Run test, inspect trace, and publish webhook URL.",
-    ],
+    body: "Create a flow, add trigger + action nodes, run tests, and publish your webhook endpoint in minutes.",
   },
   {
-    title: "AI + Memory",
-    points: [
-      "Use Paddie GPT-4.1 system provider or bring your own API key.",
-      "Set memory mode to conversation for store/retrieve routing by default.",
-      "Connect orchestrator node to tool nodes for multi-step answers.",
-      "Use chat trigger for conversational workflows.",
-    ],
+    title: "Mapping and Data Flow",
+    body: "Use source suggestions and template variables to map fields between nodes without editing raw JSON.",
   },
   {
-    title: "Code Export",
-    points: [
-      "Generate JavaScript client code for webhook integration.",
-      "Generate Python script equivalents for backend jobs.",
-      "Open StackBlitz payload for instant demo and sharing.",
-      "Persist generated artifacts from Studio backend for retrieval.",
-    ],
+    title: "AI + Orchestrator",
+    body: "Configure system GPT-4.1 or BYO providers, then route tool calls to HTTP and memory nodes.",
+  },
+  {
+    title: "Memory Integration",
+    body: "Use the memory node in conversation mode by default with authenticated user context.",
+  },
+  {
+    title: "Run History",
+    body: "Inspect execution traces, compare snapshots, and restore prior flow states directly from history.",
+  },
+  {
+    title: "Code Generation",
+    body: "Generate JavaScript and Python clients plus StackBlitz projects from any published flow.",
   },
 ];
 
@@ -37,30 +34,45 @@ export default function DocsPage() {
   return (
     <main>
       <Navbar />
-      <section className="section">
+      <section className="hero">
         <div className="container">
-          <div className="section-head">
-            <h2>Studio Docs</h2>
-            <p>Core implementation and usage guide for building, testing, and shipping workflows.</p>
+          <div className="section-head fade-up">
+            <span className="hero-eyebrow">Documentation</span>
+            <h1 className="hero-title" style={{ maxWidth: "16ch" }}>
+              Build, Test, and Ship Flows With Predictable Behavior
+            </h1>
+            <p className="hero-subtitle">
+              The docs are focused on practical flow authoring and integration, not abstract theory.
+            </p>
           </div>
-          <div className="feature-grid">
-            {docsSections.map((section) => (
-              <article key={section.title} className="card">
-                <strong>{section.title}</strong>
-                <ul className="list-clean">
-                  {section.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
+
+          <div className="docs-grid">
+            {docsSections.map((section, index) => (
+              <article key={section.title} className={`docs-card fade-up delay-${Math.min(index + 1, 3)}`}>
+                <h3>{section.title}</h3>
+                <p>{section.body}</p>
               </article>
             ))}
           </div>
-          <div className="hero-actions" style={{ marginTop: 26 }}>
+
+          <div className="code-sample fade-up delay-2">
+            <code>{`// Studio webhook call (JavaScript)
+const response = await fetch("https://studio.paddie.io/api/webhooks/<flowId>/<token>", {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ message: "hello from studio" })
+});
+
+const result = await response.json();
+console.log(result);`}</code>
+          </div>
+
+          <div className="hero-cta-row" style={{ marginTop: 24 }}>
             <Link href="/login">
               <Button>Launch Studio</Button>
             </Link>
             <Link href="https://github.com/paddieai/paddie-studio" target="_blank" rel="noreferrer">
-              <Button variant="ghost">View Open-Source Repo</Button>
+              <Button variant="ghost">GitHub Repository</Button>
             </Link>
           </div>
         </div>
@@ -69,3 +81,4 @@ export default function DocsPage() {
     </main>
   );
 }
+

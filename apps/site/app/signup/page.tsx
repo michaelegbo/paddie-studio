@@ -1,22 +1,35 @@
-'use client';
+"use client";
 
-import { Button, Logo } from '@paddie-studio/ui';
+import { Button, Logo } from "@paddie-studio/ui";
 
 export default function SignupPage() {
   return (
-    <main className="auth-wrap">
-      <div className="auth-card">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
-          <Logo />
-          <strong>Create Studio Account</strong>
+    <main className="auth-shell">
+      <section className="auth-panel fade-up">
+        <div className="auth-brand">
+          <Logo width={88} height={25} />
+          <span className="brand-labels">
+            <span className="brand-sub">Paddie Product</span>
+            <span className="brand-main">Studio Signup</span>
+          </span>
         </div>
-        <p>
-          Studio uses first-party Paddie identity. Continue to the secure sign-in flow and create your account there.
+
+        <h1 className="auth-title">Create your Studio account</h1>
+        <p className="auth-copy">
+          Studio is a first-party Paddie product. Continue to secure sign-in to create an account
+          and return directly into the Studio builder.
         </p>
-        <div style={{ marginTop: 18 }}>
-          <Button onClick={() => (window.location.href = '/api/auth/login?returnTo=/app')}>Continue</Button>
+
+        <div className="auth-actions">
+          <Button className="button-lift" onClick={() => (window.location.href = "/api/auth/login?returnTo=/app")}>
+            Continue to sign up
+          </Button>
+          <Button variant="ghost" onClick={() => (window.location.href = "/login")}>
+            Already have an account
+          </Button>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
+
