@@ -79,8 +79,16 @@ jobs:
           docker compose restart studio-edge
 
           docker compose ps
-          curl -fsS http://127.0.0.1:8088/ > /tmp/studio-home.html
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8088/ > /tmp/studio-home.html \
+              && grep -q "Paddie Studio" /tmp/studio-home.html \
+              && curl -fsS http://127.0.0.1:8088/api/health > /tmp/studio-health.json; then
+              break
+            fi
+            sleep 2
+          done
           grep -q "Paddie Studio" /tmp/studio-home.html
+          grep -q '"ok":true' /tmp/studio-health.json
           EOF
 
       - name: Verify public site
