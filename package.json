@@ -1,0 +1,13 @@
+{
+  "name": "paddie-studio",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev:site": "pnpm --filter @paddie-studio/site dev",
+    "dev:web": "pnpm --filter @paddie-studio/web dev",
+    "dev:server": "pnpm --filter @paddie-studio/server dev",
+    "dev:desktop": "pnpm --filter @paddie-studio/desktop dev",
+    "lint": "pnpm -r lint"
+  }
+}

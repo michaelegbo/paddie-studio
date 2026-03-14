@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  studio-site:
+    build:
+      context: .
+      dockerfile: apps/site/Dockerfile
+    environment:
+      PORT: 3000
+    expose:
+      - "3000"
+
+  studio-web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    expose:
+      - "80"
+
+  studio-server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    environment:
+      PORT: 4300
+      PADDIE_API_BASE_URL: https://api.paddie.io
+      PUBLIC_BASE_URL: https://studio.paddie.io
+    expose:
+      - "4300"
+
+  studio-edge:
+    image: nginx:1.29-alpine
+    depends_on:
+      - studio-site
+      - studio-web
+      - studio-server
+    ports:
+      - "8088:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro

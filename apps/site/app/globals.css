@@ -1,0 +1,33 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #0C0C15; color: #E3E3E3; }
+a { color: inherit; text-decoration: none; }
+main { min-height: 100vh; }
+.container { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+.nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(16px); background: rgba(12, 12, 21, 0.82); border-bottom: 1px solid rgba(255,255,255,0.08); }
+.nav-inner, .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 0; }
+.nav-links, .footer-links, .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero { position: relative; overflow: hidden; padding: 96px 0 72px; }
+.hero::before, .hero::after { content: ''; position: absolute; border-radius: 999px; filter: blur(100px); opacity: 0.35; pointer-events: none; }
+.hero::before { width: 340px; height: 340px; background: #3D73DD; top: 48px; right: -80px; }
+.hero::after { width: 280px; height: 280px; background: #583297; bottom: -40px; left: -60px; }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: center; }
+.badge, .stat, .card, .auth-card, .download-card { border: 1px solid #221E3C; background: #111019; border-radius: 18px; }
+.badge { display: inline-flex; padding: 8px 14px; color: #D3D3D3; margin-bottom: 16px; }
+.hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 0.98; margin: 0 0 18px; }
+.hero p, .card p, .auth-card p, .download-card p { color: #9B9DB3; }
+.preview { padding: 22px; min-height: 420px; }
+.preview-canvas { min-height: 360px; border-radius: 16px; background: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px), radial-gradient(circle at top right, rgba(61,115,221,0.24), transparent 40%), #0A0911; background-size: 24px 24px, 24px 24px, auto, auto; position: relative; overflow: hidden; }
+.node { position: absolute; min-width: 132px; padding: 14px; border-radius: 14px; background: rgba(17,16,25,0.96); border: 1px solid rgba(255,255,255,0.1); }
+.section { padding: 64px 0; }
+.section h2 { font-size: clamp(2rem, 4vw, 3rem); margin: 0 0 12px; }
+.section-head { max-width: 760px; margin-bottom: 24px; }
+.feature-grid, .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.card, .stat, .auth-card, .download-card { padding: 20px; }
+.auth-wrap, .download-wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+.auth-card, .download-card { width: min(100%, 460px); }
+input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: white; }
+label { display: block; margin: 14px 0 8px; color: #D3D3D3; }
+footer { border-top: 1px solid rgba(255,255,255,0.08); }
+@media (max-width: 960px) { .hero-grid, .feature-grid, .stats-grid { grid-template-columns: 1fr; } .nav-inner, .footer-inner { flex-direction: column; align-items: flex-start; } .preview { min-height: 320px; } }
