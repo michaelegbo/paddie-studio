@@ -1,7 +1,7 @@
-version: "3.9"
 services:
   studio-site:
     container_name: studio-site
+    restart: unless-stopped
     build:
       context: .
       dockerfile: apps/site/Dockerfile
@@ -14,6 +14,7 @@ services:
 
   studio-web:
     container_name: studio-web
+    restart: unless-stopped
     build:
       context: .
       dockerfile: apps/web/Dockerfile
@@ -24,6 +25,7 @@ services:
 
   studio-server:
     container_name: studio-server
+    restart: unless-stopped
     build:
       context: .
       dockerfile: apps/server/Dockerfile
@@ -38,6 +40,7 @@ services:
 
   studio-edge:
     container_name: studio-edge
+    restart: unless-stopped
     image: nginx:1.29-alpine
     depends_on:
       - studio-site
