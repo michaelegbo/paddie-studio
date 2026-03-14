@@ -75,7 +75,10 @@ jobs:
           git pull --ff-only origin master
           mv /tmp/studio.env .env
 
-          docker compose up -d --build studio-site studio-web studio-server studio-edge
+          docker builder prune -af || true
+          docker image prune -af || true
+          COMPOSE_PARALLEL_LIMIT=1 docker compose build studio-site studio-web studio-server
+          docker compose up -d studio-site studio-web studio-server studio-edge
           docker compose restart studio-edge
 
           docker compose ps
