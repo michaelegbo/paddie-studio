@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   studio-site:
+    container_name: studio-site
     build:
       context: .
       dockerfile: apps/site/Dockerfile
@@ -8,15 +9,21 @@ services:
       PORT: 3000
     expose:
       - "3000"
+    networks:
+      - default
 
   studio-web:
+    container_name: studio-web
     build:
       context: .
       dockerfile: apps/web/Dockerfile
     expose:
       - "80"
+    networks:
+      - default
 
   studio-server:
+    container_name: studio-server
     build:
       context: .
       dockerfile: apps/server/Dockerfile
@@ -26,8 +33,11 @@ services:
       PUBLIC_BASE_URL: https://studio.paddie.io
     expose:
       - "4300"
+    networks:
+      - default
 
   studio-edge:
+    container_name: studio-edge
     image: nginx:1.29-alpine
     depends_on:
       - studio-site
@@ -37,3 +47,11 @@ services:
       - "8088:80"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - default
+      - rmn-shared
+
+networks:
+  rmn-shared:
+    external: true
+    name: ${RMN_SHARED_DOCKER_NETWORK:-rmn-docker-source_rmn-network}
