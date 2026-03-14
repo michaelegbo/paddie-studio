@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/apps/server/src/index.js",
+    "start": "node --import tsx src/index.ts",
     "lint": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

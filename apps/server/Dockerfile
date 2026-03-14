@@ -4,4 +4,4 @@ COPY . .
 RUN corepack enable && pnpm install && pnpm --filter @paddie-studio/server build
 WORKDIR /app/apps/server
 EXPOSE 4300
-CMD ["node", "dist/apps/server/src/index.js"]
+CMD ["node", "--import", "tsx", "src/index.ts"]
