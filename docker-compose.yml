@@ -52,6 +52,8 @@ services:
       AZURE_OPENAI_DEPLOYMENT_NAME: ${AZURE_OPENAI_DEPLOYMENT_NAME:-gpt-4.1}
     expose:
       - "4300"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - default
 

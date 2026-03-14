@@ -36,8 +36,36 @@ jobs:
         env:
           VM_HOST: ${{ secrets.VM_HOST }}
           VM_USERNAME: ${{ secrets.VM_USERNAME }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          STUDIO_JWT_SECRET: ${{ secrets.STUDIO_JWT_SECRET }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
+          AZURE_OPENAI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}
         run: |
           set -euo pipefail
+          cat > /tmp/studio.env <<EOF
+          PADDIE_API_BASE_URL=https://api.paddie.io
+          PUBLIC_BASE_URL=https://studio.paddie.io
+          MONGODB_URI=${MONGODB_URI}
+          MONGODB_DATABASE=studio_prod
+          REDIS_URL=redis://host.docker.internal:6379
+          REDIS_PREFIX=studio:
+          COOKIE_SECURE=true
+          PADDIE_OIDC_ISSUER=https://api.paddie.io
+          STUDIO_OIDC_CLIENT_ID_WEB=studio-web
+          STUDIO_OIDC_CLIENT_ID_DESKTOP=studio-desktop
+          STUDIO_OIDC_REDIRECT_URI_WEB=https://studio.paddie.io/auth/callback
+          STUDIO_OIDC_REDIRECT_URI_DESKTOP=studio://auth/callback
+          STUDIO_OIDC_SCOPE=openid profile email
+          STUDIO_JWT_SECRET=${STUDIO_JWT_SECRET}
+          STUDIO_JWT_EXPIRES=15m
+          AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+          AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+          AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+          AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_DEPLOYMENT_NAME}
+          EOF
+          scp -i ~/.ssh/id_rsa /tmp/studio.env "${VM_USERNAME}@${VM_HOST}:/tmp/studio.env"
           ssh -i ~/.ssh/id_rsa "${VM_USERNAME}@${VM_HOST}" <<'EOF'
           set -euo pipefail
           cd /home/azureuser/paddie-studio
@@ -45,8 +73,10 @@ jobs:
           git fetch origin master
           git checkout master
           git pull --ff-only origin master
+          mv /tmp/studio.env .env
 
           docker compose up -d --build studio-site studio-web studio-server studio-edge
+          docker compose restart studio-edge
 
           docker compose ps
           curl -fsS http://127.0.0.1:8088/ > /tmp/studio-home.html
